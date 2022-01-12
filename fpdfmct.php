@@ -1,20 +1,22 @@
 <?php
 
 /**
- * FPDFMC - FPDF Multicell Support
+ * FPDFMC - FPDF Multicell Support for creating a table row
  *
- * MultiCell support for creating table with
+ * MultiCell support for creating table with FPDF library
+ * also support for putting text as utf8 - text will be converted to cp1252 then
  *
  * @category Library
  * @package fpdf
  * @author Ronald Simonek <ronni@ronnilix.eu>
  * @license MIT
- * @version 0.1
+ * @version 0.2
  * @uses setasign/fpdf
  */
 class fpdfmct extends FPDF
 {
 	protected $utf8 = false;
+	protected $mcellh = 0;
 
 	/**
 	 * set utf8 to true when you using utf8 for text
@@ -31,7 +33,7 @@ class fpdfmct extends FPDF
 	 * {@inheritdoc}
 	 * @see FPDF::Cell()
 	 */
-	function Cell ($w, $h = 0, $txt = '', $border = 0, $ln = 0, $align = '', $fill = false, $link = '', $utf = false)
+	function Cell ($w, $h = 0, $txt = '', $border = 0, $ln = 0, $align = '', $fill = false, $link = '')
 	{
 		if( $txt !== '' && $this->utf8 )
 		{
@@ -41,7 +43,6 @@ class fpdfmct extends FPDF
 		parent::Cell ( $w, $h, $txt, $border, $ln, $align, $fill, $link );
 	}
 
-	// @TODO funktion schreiben welche eine ganze Zeile mit Spalten ausgibt. Am besten mit übergebenem ARRAY
 	/**
 	 * for multicell check pagebreak
 	 *
@@ -56,7 +57,12 @@ class fpdfmct extends FPDF
 	}
 
 	/**
-	 * Computes the number of lines a MultiCell of width w will take
+	 * calculates the number of lines a MultiCell of width w will take
+	 *
+	 * @param int $w
+	 *        	width of cell
+	 * @param string $txt
+	 *        	text for output into the cell
 	 */
 	protected function NbLines ($w, $txt)
 	{
@@ -129,6 +135,7 @@ class fpdfmct extends FPDF
 
 	/**
 	 * MultiCell which draws rectangle in the given width for the Multicell
+	 * for last column use width 0
 	 *
 	 * @param int $w
 	 *        	width of column
@@ -141,10 +148,18 @@ class fpdfmct extends FPDF
 	 * @param String $align
 	 *        	Align of Text
 	 * @uses MultiCell
-	 * 
+	 *      
 	 */
-	protected function MCell ($w, $h, $mh, $txt, $align = 'J')
+	public function MultiCellTable ($w, $h, $txt, $align = 'J')
 	{
+		if( $this->mcellh == 0 )
+		{
+			$lines = $this->NbLines ( $w, $txt );
+			$mh = $lines * $h;
+			$this->mcellh = $mh;
+		}
+		else
+			$mh = $this->mcellh;
 		if( $w == 0 )
 		{
 			$w = $this->w - $this->rMargin - $this->x;
@@ -164,6 +179,7 @@ class fpdfmct extends FPDF
 		else
 		{
 			$this->SetY ( $y + $mh );
+			$this->mcellh = 0;
 		}
 	}
 }
