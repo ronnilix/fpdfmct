@@ -10,7 +10,7 @@
  * @package fpdf
  * @author Ronald Simonek <ronni@ronnilix.eu>
  * @license MIT
- * @version 0.2
+ * @version 0.3
  * @uses setasign/fpdf
  */
 class fpdfmct extends FPDF
@@ -48,12 +48,15 @@ class fpdfmct extends FPDF
 	 *
 	 * @param int $h
 	 *        	hight of cell
+	 * @return bool
 	 */
-	protected function CheckPageBreak ($h)
+	public function CheckPageBreak ($h)
 	{
 		// If the height h would cause an overflow, add a new page immediately
 		if( $this->GetY () + $h > $this->PageBreakTrigger )
-			$this->AddPage ();
+			return true;
+		else
+			return false;
 	}
 
 	/**
@@ -64,7 +67,7 @@ class fpdfmct extends FPDF
 	 * @param string $txt
 	 *        	text for output into the cell
 	 */
-	protected function NbLines ($w, $txt)
+	public function NbLines ($w, $txt)
 	{
 		$cw = &$this->CurrentFont['cw'];
 		if( $w == 0 ) // bei 0 ist die Länge von der aktuellen Position bis Zeilenende
@@ -140,7 +143,7 @@ class fpdfmct extends FPDF
 	 * @param int $w
 	 *        	width of column
 	 * @param int $h
-	 *        	hight of column ( used for Multicell function )
+	 *        	hight of single column for text ( used for Multicell function )
 	 * @param int $mh
 	 *        	hight of Cell ( used for drawing Rectangle )
 	 * @param String $txt
@@ -150,16 +153,8 @@ class fpdfmct extends FPDF
 	 * @uses MultiCell
 	 *      
 	 */
-	public function MultiCellTable ($w, $h, $txt, $align = 'J')
+	public function MultiCellTable ($w, $h, $mh, $txt, $align = 'J')
 	{
-		if( $this->mcellh == 0 )
-		{
-			$lines = $this->NbLines ( $w, $txt );
-			$mh = $lines * $h;
-			$this->mcellh = $mh;
-		}
-		else
-			$mh = $this->mcellh;
 		if( $w == 0 )
 		{
 			$w = $this->w - $this->rMargin - $this->x;
