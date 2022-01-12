@@ -1,0 +1,28 @@
+{
+	"keywords" : [
+		"PDF"
+	],
+	"autoload" : {
+		"classmap" : [
+			"fpdfmct.php"
+		]
+	},
+	"name" : "ronnilix/fpdfmct",
+	"type" : "library",
+	"description" : "This adds multicelltable to new fpdfmct class extended from fpdf",
+	"license" : "MIT",
+	"require" : {
+		"php" : ">=7.4",
+		"setasign/fpdf" : "~1.8.4"
+	},
+	"support" : {
+		"email" : "ronni@ronnilix.eu"
+	},
+	"authors" : [{
+			"name" : "Ronald Simonek",
+			"email" : "ronni@ronnilix.eu",
+			"homepage" : "http://www.ronnilix.eu",
+			"role" : "Developer"
+		}
+	]
+}
