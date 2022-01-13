@@ -10,7 +10,7 @@
  * @package fpdf
  * @author Ronald Simonek <ronni@ronnilix.eu>
  * @license MIT
- * @version 0.3
+ * @version 1.0
  * @uses setasign/fpdf
  */
 class fpdfmct extends FPDF
@@ -144,8 +144,8 @@ class fpdfmct extends FPDF
 	 *        	width of column
 	 * @param int $h
 	 *        	hight of single column for text ( used for Multicell function )
-	 * @param int $mh
-	 *        	hight of Cell ( used for drawing Rectangle )
+	 * @param int $l
+	 *        	lines of the cell
 	 * @param String $txt
 	 *        	Text for output
 	 * @param String $align
@@ -153,8 +153,9 @@ class fpdfmct extends FPDF
 	 * @uses MultiCell
 	 *      
 	 */
-	public function MultiCellTable ($w, $h, $mh, $txt, $align = 'J')
+	public function MultiCellTable ($w, $h, $l, $txt, $align = 'J')
 	{
+		$mh = $h * $l;
 		if( $w == 0 )
 		{
 			$w = $this->w - $this->rMargin - $this->x;
